@@ -1,0 +1,183 @@
+network:
+  version: 3
+  dummies:
+    dum.underlay:
+      link-local: []
+      mtu: 9100
+      vrf: Vrf_underlay
+      addresses:
+        - '192.168.255.2/32'
+    dum.default:
+      link-local: []
+      mtu: 9000
+      addresses:
+        - 10.255.255.2/32
+        - fc00::2/128
+  vxlans:
+    vx.1:
+      mtu: 9000
+      link-local: []
+      link: dum.underlay
+      description: "Vrf_one"
+      parameters:
+        vni: 1
+        local: "192.168.255.2"
+        generate-mac: 02:54:00:00:00:00
+        mac-learning: false
+        hairpin: true
+    vx.2:
+      mtu: 9000
+      link-local: []
+      link: dum.underlay
+      description: "Vrf_two"
+      parameters:
+        vni: 2
+        local: "192.168.255.2"
+        generate-mac: 02:54:00:00:00:00
+        mac-learning: false
+        hairpin: true
+    vx.20:
+      mtu: 9000
+      link-local: []
+      link: dum.underlay
+      description: "Vrf_mgmt"
+      parameters:
+        vni: 20
+        local: "192.168.255.2"
+        generate-mac: 02:54:00:00:00:00
+        mac-learning: false
+        hairpin: true
+    vx.42:
+      mtu: 9000
+      link-local: []
+      link: dum.underlay
+      description: "Vrf_internet"
+      parameters:
+        vni: 42
+        local: "192.168.255.2"
+        generate-mac: 02:54:00:00:00:00
+        mac-learning: false
+        hairpin: true
+    vx.1000:
+      mtu: 9000
+      link-local: []
+      link: dum.underlay
+      description: "Cluster Networking EVPN Type 5"
+      parameters:
+        vni: 1000
+        local: "192.168.255.2"
+        generate-mac: 02:54:00:00:00:00
+        mac-learning: false
+        hairpin: true
+  bridges:
+    br.one:
+      mtu: 9000
+      description: "Vrf_one"
+      link-local: []
+      parameters:
+        stp: false
+      vrf: Vrf_one
+      interfaces:
+        - vx.1
+    br.two:
+      mtu: 9000
+      description: "Vrf_two"
+      link-local: []
+      parameters:
+        stp: false
+      vrf: Vrf_two
+      interfaces:
+        - vx.2
+    br.mgmt:
+      mtu: 9000
+      description: "Vrf_mgmt"
+      link-local: []
+      parameters:
+        stp: false
+      vrf: Vrf_mgmt
+      interfaces:
+        - vx.20
+    br.internet:
+      mtu: 9000
+      description: "Vrf_internet"
+      link-local: []
+      parameters:
+        stp: false
+      vrf: Vrf_internet
+      interfaces:
+        - vx.42
+    br.default:
+      mtu: 9000
+      description: "DummyBridge: default"
+      link-local: []
+      parameters:
+        stp: false
+      interfaces:
+        - vx.1000
+  vrfs:
+    Vrf_one:
+      link-local: []
+      table: 1
+    Vrf_two:
+      link-local: []
+      table: 2
+    Vrf_internet:
+      link-local: []
+      table: 42
+    Vrf_underlay:
+      link-local: []
+      table: 250
+    Vrf_mgmt:
+      link-local: []
+      table: 20
+  veths:
+    def_mgmt:
+      mtu: 1500
+      link-local: [ipv6]
+      link: mgmt_def
+    mgmt_def:
+      mtu: 1500
+      link-local: [ipv6]
+      link: def_mgmt
+      vrf: Vrf_mgmt
+    def_internet:
+      mtu: 1500
+      link-local: [ipv6]
+      link: internet_def
+    internet_def:
+      mtu: 1500
+      link-local: [ipv6]
+      link: def_internet
+      vrf: Vrf_internet
+    def_one:
+      mtu: 1500
+      link-local: [ipv6]
+      link: one_def
+    one_def:
+      mtu: 1500
+      link-local: [ipv6]
+      link: def_one
+      vrf: Vrf_one
+    def_two:
+      mtu: 1500
+      link-local: [ipv6]
+      link: two_def
+    two_def:
+      mtu: 1500
+      link-local: [ipv6]
+      link: def_two
+      vrf: Vrf_two
+  ethernets:
+    lf1:
+      mtu: 9100
+      link-local: [ipv6]
+      vrf: Vrf_underlay
+      emit-lldp: true
+      accept-ra: false
+    lf2:
+      mtu: 9100
+      link-local: [ipv6]
+      vrf: Vrf_underlay
+      emit-lldp: true
+      accept-ra: false
+  renderer: networkd

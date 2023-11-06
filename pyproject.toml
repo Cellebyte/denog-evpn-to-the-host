@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "containerlab-evpn-on-the-host"
+version = "0.1.0"
+description = "A lab for topology testing."
+authors = ["Your Name <you@example.com>"]
+license = "MIT License"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+mrtparse = "^2.2.0"
+requests = "^2.31.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
