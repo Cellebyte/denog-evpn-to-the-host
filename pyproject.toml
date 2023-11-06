@@ -2,7 +2,7 @@
 name = "containerlab-evpn-on-the-host"
 version = "0.1.0"
 description = "A lab for topology testing."
-authors = ["Your Name <you@example.com>"]
+authors = ["Marcel Fest <denog@1kbyte.com>"]
 license = "MIT License"
 readme = "README.md"
 
