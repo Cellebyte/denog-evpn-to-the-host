@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 LABEL maintainer="Marcel Fest"
 
 ENV FRRVER="frr-stable"
-ENV NETPLANNER_VERSION="0.14.6"
+ENV NETPLANNER_VERSION="0.14.7"
 ARG DEBIAN_FRONTEND=noninteractive
 
 COPY ./netplanner.service /lib/systemd/system/
