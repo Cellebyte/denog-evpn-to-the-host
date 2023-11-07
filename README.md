@@ -81,8 +81,6 @@ curl -fsSL https://download.opensuse.org/repositories/devel:kubic:libcontainers:
 
 sudo apt update && sudo apt install containerlab podman curl
 
-curl -sSL https://install.python-poetry.org | python3 -
-
 systemctl start podman.socket
 
 ## if you get an masked service error
@@ -124,28 +122,60 @@ podman image scp tester@localhost::cellebyte.de/netplanner-frr-fabric:latest
 
 ### Getting a full-table from RIPE
 
+1. If you want to try it you can run the script which generates the routes.
 ```bash
+# Install poetry
+curl -sSL https://install.python-poetry.org | python3 -
+# load the poetry binary into the PATH
+source $HOME/.profile
 # install dependencies
 poetry install --no-root
 # instantiate a shell with all 
 poetry shell
+cd containerlab
 # generate our sample routes for the environment
 python scripts/route-dicer.py
+cd ..
+```
+
+2. If you are not a programmer just copy the example files into place.
+
+```bash
+cp example-ipv4.json ipv4.json
+cp example-ipv6.json ipv6.json
 ```
 
 ### Instantiating the lab.
 
+Finally we can start with the lab.
 ```bash
 cd containerlab
 sudo containerlab deploy --reconfigure -t containerlab.yaml
 ```
 
+Now you should be able to investigate your lab.
+
+```console
+# Show your running containers. 
+$ sudo podman ps
+CONTAINER ID  IMAGE                                      COMMAND               CREATED         STATUS         PORTS       NAMES
+8e2a5ed8a694  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-sp1
+6c473024ad3e  cellebyte.de/gobgp-fabric:latest                                 26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-injector2
+87b911b50842  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-bl1
+639094d42858  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-sp2
+2f5f8378fc68  cellebyte.de/netplanner-frr-fabric:latest  /sbin/init            26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-srv2
+ea3cfa58a440  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-lf2
+0bc9a59137fc  cellebyte.de/netplanner-frr-fabric:latest  /sbin/init            26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-srv1
+6c454ff0f697  cellebyte.de/gobgp-fabric:latest                                 26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-injector1
+03419523f000  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-lf1
+eb062c15f843  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-bl2
+```
 
 ## The LAB
 
 ### General information
 
-#### LoopBack Networks
+#### LoopBack Networks BGP Router ID Ranges
 * Switches: 192.168.0.0/24
 * Servers: 192.168.255.0/24
 
@@ -154,18 +184,19 @@ sudo containerlab deploy --reconfigure -t containerlab.yaml
 * IPv6: fc00::/64
 
 #### Peering Networks
-* fc80::/9
-* 192.168.100.0-192.168.254.0
+* fc80:cafe:{vlan}::0/126
+* 192.168.{vlan}.0/30
 * {vlan} calculated counting upwards from 100 by the vrf keys in `routes/ipv4.json` and `routes/ipv6.json`
   * 192.168.{vlan}.1/30 <-> 192.168.{vlan}.2/30
   * fc80:cafe:{vlan}::1/126 <-> fc80:cafe:{vlan}::2/126
 
-
-
 #### Routes per VRF
-* VRF mgmt 
+* Vrf_one
+* Vrf_two
+  * IPv4: 
+* Vrf_mgmt 
   * IPv4: 10.0.0.0/16
   * IPv6: fc00::/8
-* VRF internet (we will use a full-table)
+* Vrf_internet (we will use a full-table)
   * IPv4: 0.0.0.0/0
   * IPv6: ::/0

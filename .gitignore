@@ -165,4 +165,5 @@ clab-containerlab-test-setup/
 
 containerlab/routes/*
 !containerlab/routes/.gitkeep
+!containerlab/routes/example-*.json
 *.bak
