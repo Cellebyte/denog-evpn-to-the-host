@@ -10,6 +10,8 @@ Clone this repository locally to your machine.
 
 Destination could be something like `$HOME/git/containerlab-evpn-on-the-host`.
 
+Internet should work on your VM/Machine without a proxy.
+
 ## Windows
 not supported as I don't have a device to verify it.
 I think HyperV or VirtualBox could be used to setup an Ubuntu Server 22.04.03 VM as mentioned above.
@@ -57,7 +59,7 @@ git clone https://github.com/Cellebyte/denog-evpn-to-the-host.git
 ### Arch/Manjaro
 
 ```bash
-yay -S containerlab-bin podman
+yay -S containerlab-bin podman python-poetry
 ```
 
 Please follow the podman guide in the [ArchLinux wiki](https://wiki.archlinux.org/title/Podman).
@@ -77,7 +79,9 @@ sudo tee -a /etc/apt/sources.list.d/netdevops.list
 echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:unstable.list
 curl -fsSL https://download.opensuse.org/repositories/devel:kubic:libcontainers:unstable/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/devel_kubic_libcontainers_unstable.gpg > /dev/null
 
-sudo apt update && sudo apt install containerlab podman
+sudo apt update && sudo apt install containerlab podman curl
+
+curl -sSL https://install.python-poetry.org | python3 -
 
 systemctl start podman.socket
 
@@ -116,6 +120,17 @@ cd containerlab/containers/netplanner-frr
 podman build -t cellebyte.de/netplanner-frr-fabric:latest .
 # this copies the image from our local user to the root user.
 podman image scp tester@localhost::cellebyte.de/netplanner-frr-fabric:latest
+```
+
+### Getting a full-table from RIPE
+
+```bash
+# install dependencies
+poetry install --no-root
+# instantiate a shell with all 
+poetry shell
+# generate our sample routes for the environment
+python scripts/route-dicer.py
 ```
 
 ### Instantiating the lab.
