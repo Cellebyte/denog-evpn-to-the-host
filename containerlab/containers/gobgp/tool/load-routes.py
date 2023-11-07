@@ -19,8 +19,6 @@ stub = gobgp_pb2_grpc.GobgpApiStub(channel)
 def add_path(vrf, ip: ipaddress.IPv4Network|ipaddress.IPv6Network, as_path, nh):
     if len(as_path) == 0:
         return
-    if as_path[0] != 64496:
-        return
     as_path.insert(0, 64496)
 
     nlri = Any()
@@ -72,6 +70,7 @@ with open('ipv6.json') as f:
     ipv6 = json.load(f)
 
 vrfs = sorted(set(list(ipv4.keys()) + list(ipv6.keys())))
+# vrfs = ['Vrf_internet', 'Vrf_mgmt', 'Vrf_one', 'Vrf_two']
 vlan = 100
 vrf_map = {}
 for vrf in vrfs:
@@ -104,7 +103,7 @@ for vrf, routes in ipv6.items():
     if vrf == "default":
         continue
     vrf_id = vrf_map[vrf]
-    nh = f"fd00:cafe:{vrf_id}::1"
+    nh = f"fc80:cafe:{vrf_id}::1"
     try:
         subprocess.check_output(["gobgp", "vrf", "add", vrf, "rd", f"{vrf_id}:{vrf_id}", "rt", "both", f"{vrf_id}:{vrf_id}"])
     except:
@@ -128,5 +127,5 @@ for vrf in vrfs:
     subprocess.check_output(["ip", "link", "set", "dev", vrf, "up"])
     subprocess.check_output(["ip", "address", "add", f"192.168.{vlan}.1/30", "dev", vrf])
     subprocess.check_output(["gobgp", "neighbor", "add", f"192.168.{vlan}.2", "as", "64497", "vrf", vrf])
-    subprocess.check_output(["ip", "address", "add", f"fd00:cafe:{vlan}::1/126", "dev", vrf])
-    subprocess.check_output(["gobgp", "neighbor", "add", f"fd00:cafe:{vlan}::2", "as", "64497", "vrf", vrf])
+    subprocess.check_output(["ip", "address", "add", f"fc80:cafe:{vlan}::1/126", "dev", vrf])
+    subprocess.check_output(["gobgp", "neighbor", "add", f"fc80:cafe:{vlan}::2", "as", "64497", "vrf", vrf])

@@ -46,6 +46,12 @@ mkdir -p $HOME/git/containerlab-evpn-on-the-host
 sudo mount -t 9p -o trans=virtio share $HOME/git/containerlab-evpn-on-the-host -oversion=9p2000.L
 ```
 
+Or clone this repository:
+
+```bash
+git clone https://github.com/Cellebyte/denog-evpn-to-the-host.git
+```
+
 ## Install requirements for our lab
 
 ### Arch/Manjaro
@@ -88,7 +94,7 @@ additional installation methods can be found here ->
 ## Setup of the LAB
 
 ### General Description
-Now that you have a VM or local running `docker` and `containerlab` cli available we can start with the building of some containers.
+Now that you have a VM or local running `podman` and `containerlab` cli available we can start with the building of some containers.
 
 Every manual which is written in this guide assumes that you are in the root of this git project.
 
@@ -132,10 +138,19 @@ sudo containerlab deploy --reconfigure -t containerlab.yaml
 * IPv4: 10.255.255.0/24
 * IPv6: fc00::/64
 
+#### Peering Networks
+* fc80::/9
+* 192.168.100.0-192.168.254.0
+* {vlan} calculated counting upwards from 100 by the vrf keys in `routes/ipv4.json` and `routes/ipv6.json`
+  * 192.168.{vlan}.1/30 <-> 192.168.{vlan}.2/30
+  * fc80:cafe:{vlan}::1/126 <-> fc80:cafe:{vlan}::2/126
+
+
+
 #### Routes per VRF
 * VRF mgmt 
   * IPv4: 10.0.0.0/16
-  * IPv6: fc00::/7
+  * IPv6: fc00::/8
 * VRF internet (we will use a full-table)
   * IPv4: 0.0.0.0/0
   * IPv6: ::/0
