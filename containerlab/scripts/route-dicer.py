@@ -60,9 +60,10 @@ def get_internet_routes():
         return []
 
 def get_routes_from_mrt():
-    routes_ipv4 = routes_ipv6 = {}
+    routes_ipv4 = {}
+    routes_ipv6 = {}
     for route in get_internet_routes():
-
+        ipv4 = False
         # if "IPv4" in route["afi"].values():
         if "bgp_message" in route.keys() and "path_attributes" in route["bgp_message"].keys():
             as_path = []
@@ -78,25 +79,31 @@ def get_routes_from_mrt():
                             break
                 elif "COMMUNITY" in attribute["type"].values():
                     communities = attribute["value"]
-            if "nlri" in route["bgp_message"].keys() and route["bgp_message"]["nlri"]:
+            if "nlri" in route["bgp_message"].keys() and route["bgp_message"]["nlri"] and not nlri:
                 nlri = route["bgp_message"]["nlri"]
+                ipv4 = True
             if nlri:
+                routes = routes_ipv6
+                if ipv4:
+                    routes = routes_ipv4
                 for ip_route in nlri:
                     ip_route_network = ipaddress.ip_network(f'{ip_route["prefix"]}/{ip_route["length"]}')
-                    if ip_route_network not in routes_ipv6.keys():
-                        routes_ipv6[ip_route_network] = [{
+                    if ip_route_network not in routes.keys():
+                        routes[ip_route_network] = [{
                             "route": route,
                             "communities": communities,
                             "as_path": as_path
                         }]
                     else:
-                        routes_ipv6[ip_route_network].append({
+                        routes[ip_route_network].append({
                             "route": route,
                             "communities": communities,
                             "as_path": as_path
                         })
         else:
-            print(json.dumps(route, indent=2))
+            print("No NLRI information here!")
+            # print(json.dumps(route, indent=2))
+            pass
 
     return routes_ipv4, routes_ipv6
 
@@ -133,7 +140,7 @@ for vrf in vni_map.keys():
                     "network": str(route),
                     "metric":45,
                     "weight":0,
-                    "path": " ".join(gen_as_path(sample=as_numbers) if not routes_ipv6_info.get(route,[]) else routes_ipv6_info[route][0]["as_path"]),
+                    "path": " ".join(gen_as_path(sample=as_numbers) if not routes_ipv4_info.get(route,[]) else routes_ipv4_info[route][0]["as_path"]),
                     "origin":"IGP",
                     "nexthops":[
                     {
