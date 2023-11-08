@@ -79,7 +79,7 @@ sudo tee -a /etc/apt/sources.list.d/netdevops.list
 echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:unstable.list
 curl -fsSL https://download.opensuse.org/repositories/devel:kubic:libcontainers:unstable/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/devel_kubic_libcontainers_unstable.gpg > /dev/null
 
-sudo apt update && sudo apt install containerlab podman curl
+sudo apt update && sudo apt install containerlab podman curl git
 
 systemctl start podman.socket
 
