@@ -153,15 +153,12 @@ topology:
       group: server
       image: cellebyte.de/netplanner-frr-fabric:latest
   links:
-    # - endpoints: ["host-gw:host", "host:frr-lab"]
     - endpoints: ["injector1:eth1", "bl1:eth1"]
     - endpoints: ["injector2:eth1", "bl2:eth1"]
-    # - endpoints: ["bl1:eth4", "host-gw:bl1"]
     - endpoints: ["bl1:eth2", "sp1:eth1"]
     - endpoints: ["bl1:eth3", "sp2:eth1"]
     - endpoints: ["bl2:eth2", "sp1:eth2"]
     - endpoints: ["bl2:eth3", "sp2:eth2"]
-    # - endpoints: ["bl2:eth4", "host-gw:bl2"]
     - endpoints: ["lf1:eth1", "sp1:eth3"]
     - endpoints: ["lf1:eth2", "sp2:eth3"]
     - endpoints: ["lf2:eth1", "sp1:eth4"]
