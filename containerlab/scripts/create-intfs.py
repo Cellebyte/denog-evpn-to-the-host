@@ -35,8 +35,10 @@ for vrf in vrfs:
 
     subprocess.check_output(["ip", "link", "add", f"vx.{vlan}", "type", "vxlan", "id", f"{vni}", "dev", "lo", "local", sys.argv[1], "dstport", "4789", "nolearning"])
     subprocess.check_output(["ip", "link", "add", f"br.{vlan}", "type", "bridge"])
-    subprocess.check_output(["ip", "link", "set", f"vx.{vlan}", "master", f"br.{vlan}"])
-    subprocess.check_output(["ip", "link", "set", f"br.{vlan}", "master", vrf])
+    subprocess.check_output(["ip", "link", "set", f"vx.{vlan}", "master", f"br.{vlan}", "addrgenmode", "none"])
+    subprocess.check_output(["ip", "link", "set", f"vx.{vlan}", "type", "bridge_slave", "neigh_suppress", "on", "learning", "off"])
+    subprocess.check_output(["ip", "link", "set", f"br.{vlan}", "master", vrf, "addrgenmode", "none"])
+    subprocess.check_output(["ip", "link", "set", f"br.{vlan}", "addr", f"aa:bb:cc:dd:ee:{vlan:02x}"])
     subprocess.check_output(["ip", "link", "set", f"br.{vlan}", "up"])
     subprocess.check_output(["ip", "link", "set", f"vx.{vlan}", "up"])
 
