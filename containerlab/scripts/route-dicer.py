@@ -101,7 +101,7 @@ def get_routes_from_mrt():
                             "as_path": as_path
                         })
         else:
-            print("No NLRI information here!")
+            # print("No NLRI information here!")
             # print(json.dumps(route, indent=2))
             pass
 
