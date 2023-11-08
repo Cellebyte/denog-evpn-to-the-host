@@ -88,6 +88,16 @@ systemctl start podman.socket
 systemctl unmask podman.service
 systemctl unmask podman.socket
 systemctl start podman.socket
+
+# check if subuid and subgid are correctly set
+# /etc/subuid
+# $USER:100000:65536
+
+# /etc/subgid
+# $USER:100000:65536
+# If not run the following two commands.
+usermod --add-subuids 65536-100000 --add-subgids 65536-100000 $USER
+podman system migrate
 ```
 
 additional installation methods can be found here ->
