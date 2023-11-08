@@ -108,7 +108,7 @@ We need a container which injects some training routes into our network fabric.
 cd containerlab/containers/gobgp
 podman build -t cellebyte.de/gobgp-fabric:latest .
 # this copies the image from our local user to the root user.
-podman image scp tester@localhost::cellebyte.de/gobgp-fabric:latest
+podman image scp $USER@localhost::cellebyte.de/gobgp-fabric:latest
 ```
 
 ### Host container
@@ -117,7 +117,7 @@ podman image scp tester@localhost::cellebyte.de/gobgp-fabric:latest
 cd containerlab/containers/netplanner-frr
 podman build -t cellebyte.de/netplanner-frr-fabric:latest .
 # this copies the image from our local user to the root user.
-podman image scp tester@localhost::cellebyte.de/netplanner-frr-fabric:latest
+podman image scp $USER@localhost::cellebyte.de/netplanner-frr-fabric:latest
 ```
 
 ### Getting a full-table from RIPE
