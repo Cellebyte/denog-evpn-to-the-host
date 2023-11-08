@@ -36,6 +36,7 @@ topology:
       image: quay.io/frrouting/frr:9.0.1
       exec:
       - python3 /create-intfs.py 192.168.0.1
+      - /usr/lib/frr/frr-reload.py --reload /etc/frr/frr.conf
       # - ip l set dev eth4 master Vrf_mgmt
     bl2:
       binds:
@@ -50,6 +51,7 @@ topology:
       image: quay.io/frrouting/frr:9.0.1
       exec:
       - python3 /create-intfs.py 192.168.0.2
+      - /usr/lib/frr/frr-reload.py --reload /etc/frr/frr.conf
       # - ip l set dev eth4 master Vrf_mgmt
     sp1:
       binds:
@@ -61,6 +63,7 @@ topology:
       image: quay.io/frrouting/frr:9.0.1
       exec:
       - ip a add 192.168.0.3/32 dev lo
+      - /usr/lib/frr/frr-reload.py --reload /etc/frr/frr.conf
     sp2:
       binds:
       - configs/sp2/daemons:/etc/frr/daemons
@@ -71,6 +74,7 @@ topology:
       image: quay.io/frrouting/frr:9.0.1
       exec:
       - ip a add 192.168.0.4/32 dev lo
+      - /usr/lib/frr/frr-reload.py --reload /etc/frr/frr.conf
     lf1:
       binds:
       - configs/lf1/daemons:/etc/frr/daemons
@@ -89,6 +93,7 @@ topology:
       - ip l set dev srv2 address 00:50:56:2f:00:01
       - ip l set dev srv2 down
       - ip l set dev srv2 up
+      - /usr/lib/frr/frr-reload.py --reload /etc/frr/frr.conf
       # - ip l set dev srv3 mtu 9100
       # - ip l set dev srv3 address 00:50:56:2f:00:01
       # - ip l set dev srv3 down
@@ -119,6 +124,7 @@ topology:
       - ip l set dev srv2 address 00:50:56:2f:00:02
       - ip l set dev srv2 down
       - ip l set dev srv2 up
+      - /usr/lib/frr/frr-reload.py --reload /etc/frr/frr.conf
       # - ip l set dev srv3 mtu 9100
       # - ip l set dev srv3 address 00:50:56:2f:00:02
       # - ip l set dev srv3 down
