@@ -27,6 +27,7 @@ RUN curl -fsSL "https://github.com/telekom/netplanner/releases/download/${NETPLA
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        frr \
+       frr-pythontools \
        mtr-tiny \
        dnsutils \
        bridge-utils \
