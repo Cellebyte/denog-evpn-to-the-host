@@ -35,7 +35,7 @@ RUN apt-get update \
        ethtool \
        iftop \
        iperf \
-       iputils-ping
+       iputils-ping \
        iputils-arping \
        nmap \
        socat \
