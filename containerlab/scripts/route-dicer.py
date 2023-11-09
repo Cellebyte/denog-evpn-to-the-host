@@ -8,42 +8,37 @@ import requests
 from pathlib import Path
 from typing import List
 vni_map = {
-    "default": 0,
     "Vrf_one": 1,
     "Vrf_two": 2,
     "Vrf_mgmt": 20,
     "Vrf_internet": 42
 }
-
-## Underlay Networks
-underlay_network_fabric_ipv4 = "192.168.0.0/24"
-underlay_network_node_ipv4 = "192.168.255.0/24"
-
-## Overlay Networks
-overlay_cluster_network_k8s_node_ipv4 = "10.255.255.0/24"
-overlay_cluster_network_k8s_node_ipv6 = "fc00::/64"
-
 ## Networks which are used for the Route-Dicer
-
 
 network_map = {
     "Vrf_one": {
         "ipv4": "192.168.255.255/32",
         "ipv6": "fd10::1/128",
+        "ipv4_slicer": 32,
+        "ipv6_slicer": 128,
         "as_numbers": [65552],
 
     },
     "Vrf_two": {
         "ipv4": "192.168.254.254/32",
         "ipv6": "fd10::2/128",
+        "ipv4_slicer": 32,
+        "ipv6_slicer": 128,
         "as_numbers": [65536],
     },
     "Vrf_mgmt": {
         "ipv4": "10.0.0.0/9",
         "ipv6": "fd00::/8",
+        "ipv4_slicer": 13,
+        "ipv6_slicer": 12,
         "as_numbers": range(65536,65552),
     },
-    "Vrf_internet": {}
+    "Vrf_internet": {} # this currently uses a full-table from ripe.
 }
 
 vrf_routes_ipv4 = {}
@@ -120,9 +115,9 @@ for vrf in vni_map.keys():
     as_numbers = []
     if networks:
         py_network_ipv4 = ipaddress.ip_network(networks["ipv4"])
-        routes_ipv4 = list(py_network_ipv4.subnets(new_prefix=24))
+        routes_ipv4 = list(py_network_ipv4.subnets(new_prefix=networks.get("ipv4_slicer", 24)))
         py_network_ipv6 = ipaddress.ip_network(networks["ipv6"])
-        routes_ipv6 = list(py_network_ipv6.subnets(new_prefix=18))
+        routes_ipv6 = list(py_network_ipv6.subnets(new_prefix=networks.get("ipv6_slicer", 18)))
         as_numbers = list(networks["as_numbers"])
     else:
         routes_ipv4_info, routes_ipv6_info = get_routes_from_mrt()

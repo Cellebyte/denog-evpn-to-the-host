@@ -27,23 +27,17 @@ RUN curl -fsSL "https://github.com/telekom/netplanner/releases/download/${NETPLA
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        frr \
-       mtr-tiny \
-       bind-tools \
+       mtr-tiny \
+       dnsutils \
        bridge-utils \
-       conntrack-tools \
+       conntrack \
        curl \
-       drill \
        ethtool \
        iftop \
        iperf \
-       iptraf-ng \
-       iputils \
-       ipvsadm \
-       mtr \
-       netgen \
-       ngrep \
+       iputils-ping
+       iputils-arping \
        nmap \
-       nmap-nping \
        socat \
        tcpdump \
        tcptraceroute \
