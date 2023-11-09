@@ -10,7 +10,7 @@ topology:
       - routes/ipv4.json:/ipv4.json:ro
       - routes/ipv6.json:/ipv6.json:ro
       kind: linux
-      group: '10'
+      group: '9'
       image: cellebyte.de/gobgp-fabric:latest
       exec:
       - python3 /tool/load-routes.py
@@ -19,7 +19,7 @@ topology:
       - routes/ipv4.json:/ipv4.json:ro
       - routes/ipv6.json:/ipv6.json:ro
       kind: linux
-      group: '10'
+      group: '9'
       image: cellebyte.de/gobgp-fabric:latest
       exec:
       - python3 /tool/load-routes.py
@@ -32,7 +32,7 @@ topology:
       - routes/ipv4.json:/ipv4.json:ro
       - routes/ipv6.json:/ipv6.json:ro
       kind: linux
-      group: dc-gw
+      group: border-leaf
       image: quay.io/frrouting/frr:9.0.1
       exec:
       - python3 /create-intfs.py 192.168.0.1
@@ -47,7 +47,7 @@ topology:
       - routes/ipv4.json:/ipv4.json:ro
       - routes/ipv6.json:/ipv6.json:ro
       kind: linux
-      group: dc-gw
+      group: border-leaf
       image: quay.io/frrouting/frr:9.0.1
       exec:
       - python3 /create-intfs.py 192.168.0.2
