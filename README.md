@@ -1,5 +1,12 @@
 # Containerlab EVPN on the host
 
+## Excercises
+
+* [Exercise 1](docs/exc_1.md)
+* [Exercise 2](docs/exc_2.md)
+
+## General Info around the environment
+
 We use Ubuntu 22.04.03 LTS **Server** as our image for the guide.
 
 It can be downloaded [here](https://releases.ubuntu.com/jammy/)
@@ -41,7 +48,8 @@ PasswordAuthentication=yes
 MaxAuthTries 15 # if you have a lot of ssh-keys.
 ```
 
-Additionally you could also mount the shared folder into your VM
+Additionally you could also mount the shared folder into your VM.
+This is an example for UTM on MacOS if you don't know how to mount your directory from the host system just clone it.
 
 ```bash
 mkdir -p $HOME/git/containerlab-evpn-on-the-host
@@ -51,7 +59,8 @@ sudo mount -t 9p -o trans=virtio share $HOME/git/containerlab-evpn-on-the-host -
 Or clone this repository:
 
 ```bash
-git clone https://github.com/Cellebyte/denog-evpn-to-the-host.git
+mkdir -p $HOME/git/containerlab-evpn-on-the-host
+git clone https://github.com/Cellebyte/denog-evpn-to-the-host.git $HOME/git/containerlab-evpn-on-the-host
 ```
 
 ## Install requirements for our lab
@@ -158,27 +167,85 @@ cp example-ipv6.json ipv6.json
 ### Instantiating the lab.
 
 Finally we can start with the lab.
-```bash
-cd containerlab
-sudo containerlab deploy --runtime podman --reconfigure -t containerlab.yaml
+```console
+~$ cd containerlab
+~$ sudo containerlab deploy --runtime podman --reconfigure -t containerlab.yaml
+> INFO[0000] Containerlab v0.47.2 started
+> INFO[0000] Parsing & checking topology file: containerlab.yaml
+> INFO[0000] Removing /home/tester/git/containerlab-evpn-on-the-host/containerlab/clab-containerlab-test-setup directory...
+> INFO[0001] Creating lab directory: /home/tester/git/containerlab-evpn-on-the-host/containerlab/clab-containerlab-test-setup
+> INFO[0007] Creating link: injector1:eth1 <--> bl1:eth1
+> INFO[0011] Creating link: bl1:eth2 <--> sp1:eth1
+> INFO[0017] Creating link: lf2:eth1 <--> sp1:eth4
+> INFO[0019] Creating link: bl1:eth3 <--> sp2:eth1
+> INFO[0020] Creating link: lf2:srv1 <--> srv1:lf2
+> INFO[0020] Creating link: lf2:eth2 <--> sp2:eth4
+> INFO[0033] Creating link: lf2:srv2 <--> srv2:lf2
+> INFO[0033] Creating link: injector2:eth1 <--> bl2:eth1
+> INFO[0034] Creating link: bl2:eth2 <--> sp1:eth2
+> INFO[0035] Creating link: lf1:eth1 <--> sp1:eth3
+> INFO[0036] Creating link: bl2:eth3 <--> sp2:eth2
+> INFO[0036] Creating link: lf1:eth2 <--> sp2:eth3
+> INFO[0037] Creating link: lf1:srv1 <--> srv1:lf1
+> INFO[0038] Creating link: lf1:srv2 <--> srv2:lf1
+> INFO[0046] Adding containerlab host entries to /etc/hosts file
+> INFO[0046] Adding ssh config for containerlab nodes
+> INFO[0646] Executed command "ip a add 192.0.2.5/32 dev lo" on the node "lf1". stdout:
+> INFO[0646] Executed command "ip l set dev srv1 mtu 9100" on the node "lf1". stdout:
+> INFO[0646] Executed command "ip l set dev srv1 address 00:50:56:2f:00:01" on the node "lf1". stdout:
+> INFO[0646] Executed command "ip l set dev srv1 down" on the node "lf1". stdout:
+> INFO[0646] Executed command "ip l set dev srv1 up" on the node "lf1". stdout:
+> INFO[0646] Executed command "ip l set dev srv2 mtu 9100" on the node "lf1". stdout:
+> INFO[0646] Executed command "ip l set dev srv2 address 00:50:56:2f:00:01" on the node "lf1". stdout:
+> INFO[0646] Executed command "ip l set dev srv2 down" on the node "lf1". stdout:
+> INFO[0646] Executed command "ip l set dev srv2 up" on the node "lf1". stdout:
+> INFO[0646] Executed command "ip a add 192.168.0.4/32 dev lo" on the node "sp2". stdout:
+> INFO[0646] Executed command "python3 /tool/load-routes.py" on the node "injector1". stdout:
+> INFO[0646] Executed command "python3 /tool/load-routes.py" on the node "injector2". stdout:
+> INFO[0646] Executed command "ip a add 192.0.2.6/32 dev lo" on the node "lf2". stdout:
+> INFO[0646] Executed command "ip l set dev srv1 mtu 9100" on the node "lf2". stdout:
+> INFO[0646] Executed command "ip l set dev srv1 address 00:50:56:2f:00:02" on the node "lf2". stdout:
+> INFO[0646] Executed command "ip l set dev srv1 down" on the node "lf2". stdout:
+> INFO[0646] Executed command "ip l set dev srv1 up" on the node "lf2". stdout:
+> INFO[0646] Executed command "ip l set dev srv2 mtu 9100" on the node "lf2". stdout:
+> INFO[0646] Executed command "ip l set dev srv2 address 00:50:56:2f:00:02" on the node "lf2". stdout:
+> INFO[0646] Executed command "ip l set dev srv2 down" on the node "lf2". stdout:
+> INFO[0646] Executed command "ip l set dev srv2 up" on the node "lf2". stdout:
+> INFO[0646] Executed command "ip a add 192.168.0.3/32 dev lo" on the node "sp1". stdout:
+> INFO[0646] Executed command "python3 /create-intfs.py 192.168.0.1" on the node "bl1". stdout:
+> INFO[0646] Executed command "python3 /create-intfs.py 192.168.0.2" on the node "bl2". stdout:
+> +----+----------------------------------------+--------------+-------------------------------------------+-------+---------+-----------------+-----------------------+
+> | #  |                  Name                  | Container ID |                   Image                   | Kind  |  State  |  IPv4 Address   |     IPv6 Address      |
+> +----+----------------------------------------+--------------+-------------------------------------------+-------+---------+-----------------+-----------------------+
+> |  1 | clab-containerlab-test-setup-bl1       | 66372aab905d | quay.io/frrouting/frr:9.0.1               | linux | running | 172.20.20.34/24 | 2001:172:20:20::22/64 |
+> |  2 | clab-containerlab-test-setup-bl2       | 62b2eda61478 | quay.io/frrouting/frr:9.0.1               | linux | running | 172.20.20.40/24 | 2001:172:20:20::28/64 |
+> |  3 | clab-containerlab-test-setup-injector1 | d5d36a34ccfb | cellebyte.de/gobgp-fabric:latest          | linux | running | 172.20.20.32/24 | 2001:172:20:20::20/64 |
+> |  4 | clab-containerlab-test-setup-injector2 | 4a8cc6dd2482 | cellebyte.de/gobgp-fabric:latest          | linux | running | 172.20.20.33/24 | 2001:172:20:20::21/64 |
+> |  5 | clab-containerlab-test-setup-lf1       | 5bdd57bd763f | quay.io/frrouting/frr:9.0.1               | linux | running | 172.20.20.41/24 | 2001:172:20:20::29/64 |
+> |  6 | clab-containerlab-test-setup-lf2       | c8a7a747c4d4 | quay.io/frrouting/frr:9.0.1               | linux | running | 172.20.20.36/24 | 2001:172:20:20::24/64 |
+> |  7 | clab-containerlab-test-setup-sp1       | 537694f27f3b | quay.io/frrouting/frr:9.0.1               | linux | running | 172.20.20.35/24 | 2001:172:20:20::23/64 |
+> |  8 | clab-containerlab-test-setup-sp2       | 24b5f1bb8bde | quay.io/frrouting/frr:9.0.1               | linux | running | 172.20.20.37/24 | 2001:172:20:20::25/64 |
+> |  9 | clab-containerlab-test-setup-srv1      | f2b9e8eef317 | cellebyte.de/netplanner-frr-fabric:latest | linux | running | 172.20.20.38/24 | 2001:172:20:20::26/64 |
+> | 10 | clab-containerlab-test-setup-srv2      | b90209ad2334 | cellebyte.de/netplanner-frr-fabric:latest | linux | running | 172.20.20.39/24 | 2001:172:20:20::27/64 |
+> +----+----------------------------------------+--------------+-------------------------------------------+-------+---------+-----------------+-----------------------+
 ```
 
 Now you should be able to investigate your lab.
 
 ```console
 # Show your running containers. 
-$ sudo podman ps
-CONTAINER ID  IMAGE                                      COMMAND               CREATED         STATUS         PORTS       NAMES
-8e2a5ed8a694  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-sp1
-6c473024ad3e  cellebyte.de/gobgp-fabric:latest                                 26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-injector2
-87b911b50842  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-bl1
-639094d42858  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-sp2
-2f5f8378fc68  cellebyte.de/netplanner-frr-fabric:latest  /sbin/init            26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-srv2
-ea3cfa58a440  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-lf2
-0bc9a59137fc  cellebyte.de/netplanner-frr-fabric:latest  /sbin/init            26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-srv1
-6c454ff0f697  cellebyte.de/gobgp-fabric:latest                                 26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-injector1
-03419523f000  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-lf1
-eb062c15f843  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-bl2
+~$ sudo podman ps
+> CONTAINER ID  IMAGE                                      COMMAND               CREATED         STATUS         PORTS       NAMES
+> 8e2a5ed8a694  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-sp1
+> 6c473024ad3e  cellebyte.de/gobgp-fabric:latest                                 26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-injector2
+> 87b911b50842  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-bl1
+> 639094d42858  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-sp2
+> 2f5f8378fc68  cellebyte.de/netplanner-frr-fabric:latest  /sbin/init            26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-srv2
+> ea3cfa58a440  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-lf2
+> 0bc9a59137fc  cellebyte.de/netplanner-frr-fabric:latest  /sbin/init            26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-srv1
+> 6c454ff0f697  cellebyte.de/gobgp-fabric:latest                                 26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-injector1
+> 03419523f000  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-lf1
+> eb062c15f843  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  26 minutes ago  Up 26 minutes              clab-containerlab-test-setup-bl2
 ```
 
 ## The LAB
@@ -186,12 +253,17 @@ eb062c15f843  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  2
 ### General information
 
 #### LoopBack Networks BGP Router ID Ranges
+
 * Switches: 192.168.0.0/24
 * Servers: 192.168.255.0/24
 
 #### Node Overlay Network (e.g):
 * IPv4: 10.255.255.0/24
+  * **srv1**: 10.255.255.1/32
+  * **srv2**: 10.255.255.2/32
 * IPv6: fc00::/64
+  * **srv1**: fc00::1/128
+  * **srv2**: fc00::2/128
 
 #### Peering Networks
 * fc80:cafe:{vlan}::0/126
@@ -231,3 +303,4 @@ localhost:50080
 # e.g.
 192.168.64.2:50080
 ```
+
