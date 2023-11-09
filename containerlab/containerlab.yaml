@@ -148,6 +148,7 @@ topology:
       group: server
       image: cellebyte.de/netplanner-frr-fabric:latest
       exec:
+      - /usr/lib/frr/frr-reload.py --reload /etc/frr/frr.conf
     srv2:
       binds:
       ###
@@ -158,6 +159,8 @@ topology:
       user: root
       group: server
       image: cellebyte.de/netplanner-frr-fabric:latest
+      exec:
+      - /usr/lib/frr/frr-reload.py --reload /etc/frr/frr.conf
   links:
     - endpoints: ["injector1:eth1", "bl1:eth1"]
     - endpoints: ["injector2:eth1", "bl2:eth1"]

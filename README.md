@@ -160,7 +160,7 @@ cp example-ipv6.json ipv6.json
 Finally we can start with the lab.
 ```bash
 cd containerlab
-sudo containerlab deploy --reconfigure -t containerlab.yaml
+sudo containerlab deploy --runtime podman --reconfigure -t containerlab.yaml
 ```
 
 Now you should be able to investigate your lab.
@@ -201,12 +201,33 @@ eb062c15f843  quay.io/frrouting/frr:9.0.1                /usr/lib/frr/dock...  2
   * fc80:cafe:{vlan}::1/126 <-> fc80:cafe:{vlan}::2/126
 
 #### Routes per VRF
+
+If you have performance issues. I suggest reducing the injected routes.
+This can be changed in the `network_map` in the folder `containerlab/scripts/route-dicer.py`.
+
 * Vrf_one
+  * IPv4: 192.168.255.255/32
+  * IPv6: fd10::1/128
 * Vrf_two
-  * IPv4: 
-* Vrf_mgmt 
-  * IPv4: 10.0.0.0/16
-  * IPv6: fc00::/8
+  * IPv4: 192.168.254.254/32
+  * IPv6: fd10::2/128
+* Vrf_mgmt
+  * IPv4: 10.0.0.0/9 evenly splitted into /13
+  * IPv6: fc00::/8 evenly splitted into /12
 * Vrf_internet (we will use a full-table)
   * IPv4: 0.0.0.0/0
   * IPv6: ::/0
+
+#### Visualization
+
+This visualizes your containerlab via a webserver.
+
+```bash
+sudo containerlab graph --runtime podman  -t containerlab.yaml
+# if you have a local installation
+# e.g.
+localhost:50080
+# if you use an vm. connect to the ip of the vm
+# e.g.
+192.168.64.2:50080
+```
