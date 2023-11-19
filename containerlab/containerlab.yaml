@@ -11,7 +11,7 @@ topology:
       - routes/ipv6.json:/ipv6.json:ro
       kind: linux
       group: '9'
-      image: cellebyte.de/gobgp-fabric:latest
+      image: ghcr.io/cellebyte/denog-evpn-to-the-host/gobgp-fabric:0.0.1
       exec:
       - python3 /tool/load-routes.py
     injector2:
@@ -20,7 +20,7 @@ topology:
       - routes/ipv6.json:/ipv6.json:ro
       kind: linux
       group: '9'
-      image: cellebyte.de/gobgp-fabric:latest
+      image: ghcr.io/cellebyte/denog-evpn-to-the-host/gobgp-fabric:0.0.1
       exec:
       - python3 /tool/load-routes.py
     bl1:
@@ -140,7 +140,7 @@ topology:
       kind: linux
       user: root
       group: server
-      image: cellebyte.de/netplanner-frr-fabric:latest
+      image: ghcr.io/cellebyte/denog-evpn-to-the-host/netplanner-frr-fabric:0.0.1
       exec:
     srv2:
       binds:
@@ -151,7 +151,7 @@ topology:
       kind: linux
       user: root
       group: server
-      image: cellebyte.de/netplanner-frr-fabric:latest
+      image: ghcr.io/cellebyte/denog-evpn-to-the-host/netplanner-frr-fabric:0.0.1
       exec:
   links:
     - endpoints: ["injector1:eth1", "bl1:eth1"]

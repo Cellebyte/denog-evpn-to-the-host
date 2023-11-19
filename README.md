@@ -121,22 +121,26 @@ Every manual which is written in this guide assumes that you are in the root of 
 
 ### Injector container
 
+FYI: you do not need to build the container as it is already published in the ghcr.io registry
+
 We need a container which injects some training routes into our network fabric.
 
 ```bash
 cd containerlab/containers/gobgp
-podman build -t cellebyte.de/gobgp-fabric:latest .
+podman build -t ghcr.io/cellebyte/denog-evpn-to-the-host/gobgp-fabric:0.0.1 .
 # this copies the image from our local user to the root user.
-podman image scp $USER@localhost::cellebyte.de/gobgp-fabric:latest
+podman image scp $USER@localhost::ghcr.io/cellebyte/denog-evpn-to-the-host/gobgp-fabric:0.0.1
 ```
 
 ### Host container
 
+FYI: you do not need to build the container as it is already published in the ghcr.io registry
+
 ```bash
 cd containerlab/containers/netplanner-frr
-podman build -t cellebyte.de/netplanner-frr-fabric:latest .
+podman build -t ghcr.io/cellebyte/denog-evpn-to-the-host/netplanner-frr-fabric:0.0.1 .
 # this copies the image from our local user to the root user.
-podman image scp $USER@localhost::cellebyte.de/netplanner-frr-fabric:latest
+podman image scp $USER@localhost::ghcr.io/cellebyte/denog-evpn-to-the-host/netplanner-frr-fabric:0.0.1
 ```
 
 ### Getting a full-table from RIPE
