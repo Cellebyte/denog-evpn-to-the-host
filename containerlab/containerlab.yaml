@@ -141,7 +141,6 @@ topology:
       user: root
       group: server
       image: ghcr.io/cellebyte/denog-evpn-to-the-host/netplanner-frr-fabric:0.0.1
-      exec:
     srv2:
       binds:
       ###
@@ -152,7 +151,6 @@ topology:
       user: root
       group: server
       image: ghcr.io/cellebyte/denog-evpn-to-the-host/netplanner-frr-fabric:0.0.1
-      exec:
   links:
     - endpoints: ["injector1:eth1", "bl1:eth1"]
     - endpoints: ["injector2:eth1", "bl2:eth1"]
