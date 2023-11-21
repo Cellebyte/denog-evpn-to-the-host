@@ -34,11 +34,17 @@ network_map = {
     "Vrf_mgmt": {
         "ipv4": "10.0.0.0/9",
         "ipv6": "fd00::/8",
-        "ipv4_slicer": 13,
-        "ipv6_slicer": 12,
+        "ipv4_slicer": 10,
+        "ipv6_slicer": 10,
         "as_numbers": range(65536,65552),
     },
-    "Vrf_internet": {} # this currently uses a full-table from ripe.
+    "Vrf_internet": {
+        "ipv4": "0.0.0.0/0",
+        "ipv6": "::/0",
+        "ipv4_slicer": 0,
+        "ipv6_slicer": 0,
+        "as_numbers": [65552],
+    } # this currently uses a full-table from ripe.
 }
 
 vrf_routes_ipv4 = {}
